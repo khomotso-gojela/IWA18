@@ -79,7 +79,7 @@ const handleAddSubmit = (event) => {
 /*EDIT ORDER FUNCTIONS*/
 const handleEditToggle = (event) => {
     html.edit.overlay.show()
-    console.log(event)
+    
 
     if (event.target.dataset.id){
         const props = {
@@ -101,13 +101,37 @@ const handleEditToggle = (event) => {
 const handleEditSubmit = (event) => {
     event.preventDefault()
 
-    const order = document.querySelector(`[data-id=${html.edit.id}]`)
+    const props = {
+        id: html.edit.id,
+        title: html.edit.title.value,
+        table: html.edit.table.value,
+        created: new Date(),
+        column: html.edit.column.selectedIndex
+    }
+    const statusCol = {0:"ordered", 1:"preparing", 2:"served"}
 
+    const order = document.querySelector(`[data-id="${html.edit.id}"]`)
+    const removeOrder = document.querySelector(`[data-id="${html.edit.id}"]`)
+    
+    if (props.column == 0 && document.querySelector(`[data-column="ordered"] [data-id="${html.edit.id}"]`)) {
+        order.querySelector('[data-order-title]').textContent = html.edit.title.value
+        order.querySelector('[data-order-table]').textContent = html.edit.table.value
+    } else {
+
+        const newOrder = createOrderHtml(props)
+        removeOrder.remove()
+        const grid = html.other.grid.querySelector(`[data-column=${statusCol[props.column]}]`)
+        grid.appendChild(newOrder)
+    }
 
     html.edit.form.reset()
     html.edit.overlay.close()
 }
-const handleDelete = (event) => {}
+const handleDelete = (event) => {
+    html.edit.overlay.close()
+    const order = document.querySelector(`[data-id="${html.edit.id}"]`)
+    order.remove()
+}
 
 html.add.cancel.addEventListener('click', handleAddToggle)
 html.other.add.addEventListener('click', handleAddToggle)
