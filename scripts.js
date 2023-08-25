@@ -86,13 +86,14 @@ const handleEditToggle = (event) => {
             id: event.target.dataset.id,
             title: event.target.querySelector('[data-order-title]').textContent,
             table: event.target.querySelector('[data-order-table]').textContent,
-            created: new Date()
         }
 
+        html.edit.id = props.id
         html.edit.title.setAttribute('value',props.title)
         html.edit.table.selectedIndex = props.table - 1
-        
+
     } else if (event.target == html.edit.cancel){
+        html.edit.form.reset()
         html.edit.overlay.close()
     }
 }
@@ -100,8 +101,10 @@ const handleEditToggle = (event) => {
 const handleEditSubmit = (event) => {
     event.preventDefault()
 
-    
-    
+    const order = document.querySelector(`[data-id=${html.edit.id}]`)
+
+
+    html.edit.form.reset()
     html.edit.overlay.close()
 }
 const handleDelete = (event) => {}
