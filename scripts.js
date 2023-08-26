@@ -1,6 +1,5 @@
-import { createOrderData } from './data.js';
-import { createOrderHtml } from './view.js';
-import { html } from './view.js';
+import { createOrderData, state, updateDragging } from './data.js';
+import { html, createOrderHtml, moveToColumn, updateDraggingHtml } from './view.js';
 
 
 /**
@@ -33,8 +32,15 @@ const handleDragOver = (event) => {
 }
 
 
-const handleDragStart = (event) => {}
-const handleDragEnd = (event) => {}
+const handleDragStart = (event) => {
+    const item = event.target
+    updateDragging(item)
+    updateDraggingHtml(item)
+}
+
+const handleDragEnd = (event) => {
+    moveToColumn(event.target.dataset.id,state.dragging.over)
+};
 
 /* HELP OVERLAY DISPLAY AND CLOSE */
 const handleHelpToggle = (event) => {
@@ -65,12 +71,7 @@ const handleAddSubmit = (event) => {
 
     const orderData = createOrderData(props)
     const order = createOrderHtml(orderData)
-    console.log(order)
     grid.appendChild(order)
-
-    //console.log(html.other.grid.querySelector(`[data-id="${orderData.id}"]`))
-    console.log(html.other.grid.dataset)
-    
 
     html.add.overlay.close()
     html.add.form.reset()
